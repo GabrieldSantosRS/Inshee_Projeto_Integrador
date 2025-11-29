@@ -1,0 +1,82 @@
+<div class="container">
+  <div class="card">
+    <h1>{{ mostrarCadastro ? 'Cadastro' : 'Login' }}</h1>
+
+    <!-- FORMULÁRIO DE CADASTRO -->
+    <form *ngIf="mostrarCadastro" [formGroup]="cadastroForm" (ngSubmit)="onCadastro()">
+      <div class="form-group">
+        <label>Nome:</label>
+        <input type="text" formControlName="nome" placeholder="Digite seu nome completo">
+        <span class="error" *ngIf="cadastroForm.get('nome')?.invalid && cadastroForm.get('nome')?.touched">
+          Nome deve ter no mínimo 3 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" formControlName="email" placeholder="seu@email.com">
+        <span class="error" *ngIf="cadastroForm.get('email')?.invalid && cadastroForm.get('email')?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>CPF:</label>
+        <input type="text" formControlName="cpf" placeholder="12345678900" maxlength="11">
+        <span class="error" *ngIf="cadastroForm.get('cpf')?.invalid && cadastroForm.get('cpf')?.touched">
+          CPF deve ter 11 dígitos
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Senha:</label>
+        <input type="password" formControlName="senha" placeholder="Mínimo 6 caracteres">
+        <span class="error" *ngIf="cadastroForm.get('senha')?.invalid && cadastroForm.get('senha')?.touched">
+          Senha deve ter no mínimo 6 caracteres
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Sexo:</label>
+        <select formControlName="sexo">
+          <option value="">Selecione</option>
+          <option value="feminino">Feminino</option>
+          <option value="masculino">Masculino</option>
+          <option value="outro">Outro</option>
+        </select>
+        <span class="error" *ngIf="cadastroForm.get('sexo')?.invalid && cadastroForm.get('sexo')?.touched">
+          Selecione uma opção
+        </span>
+      </div>
+
+      <button type="submit" class="btn-primary">Cadastrar</button>
+      <button type="button" class="btn-secondary" (click)="alternarFormulario()">
+        Já tenho cadastro
+      </button>
+    </form>
+
+    <!-- FORMULÁRIO DE LOGIN -->
+    <form *ngIf="!mostrarCadastro" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label>Email:</label>
+        <input type="email" formControlName="email" placeholder="seu@email.com">
+        <span class="error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          Email inválido
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label>Senha:</label>
+        <input type="password" formControlName="senha" placeholder="Digite sua senha">
+        <span class="error" *ngIf="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched">
+          Digite sua senha
+        </span>
+      </div>
+
+      <button type="submit" class="btn-primary">Entrar</button>
+      <button type="button" class="btn-secondary" (click)="alternarFormulario()">
+        Criar uma conta
+      </button>
+    </form>
+  </div>
+</div>
