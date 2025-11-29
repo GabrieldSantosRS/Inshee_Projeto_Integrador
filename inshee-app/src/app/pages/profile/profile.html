@@ -1,17 +1,146 @@
 <div class="container">
+  <!-- HEADER -->
   <div class="header">
-    <h1>Perfil - {{ nomeUsuario }}</h1>
+    <h1>Perfil - {{ usuario.nome }}</h1>
     <button class="btn-logout" (click)="logout()">Sair</button>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h2>🩸 Ciclos Menstruais</h2>
-      <button class="btn-add" (click)="abrirFormulario()">+ Adicionar Ciclo</button>
+  <!-- CARD DE INFORMAÇÕES DO USUÁRIO -->
+  <div class="card-usuario">
+    <div class="foto-perfil">
+      <div class="circulo-foto">👤</div>
+    </div>
+    
+    <div class="info-usuario">
+      <p><strong>📧 Email:</strong> {{ usuario.email }}</p>
+      <p><strong>📱 Telefone:</strong> {{ usuario.telefone || 'Não informado' }}</p>
+      <p><strong>🎂 Data de Nascimento:</strong> {{ usuario.dataNascimento }}</p>
+      <p><strong>⚧ Gênero:</strong> {{ usuario.genero }}</p>
     </div>
 
-    <!-- FORMULÁRIO -->
-    <div class="formulario-overlay" *ngIf="mostrarFormulario">
+    <div class="botoes-usuario">
+      <button class="btn-editar" (click)="abrirEditarPerfil()">✏️ Editar Perfil</button>
+      <button class="btn-senha" (click)="abrirTrocarSenha()">🔐 Trocar Senha</button>
+    </div>
+  </div>
+
+  <!-- ABAS -->
+  <div class="card">
+    <div class="abas">
+      <button 
+        class="aba" 
+        [class.ativa]="abaAtiva === 'ciclos'"
+        (click)="trocarAba('ciclos')">
+        🩸 Ciclos
+      </button>
+      <button 
+        class="aba" 
+        [class.ativa]="abaAtiva === 'sintomas'"
+        (click)="trocarAba('sintomas')">
+        💊 Sintomas
+      </button>
+      <button 
+        class="aba" 
+        [class.ativa]="abaAtiva === 'saude'"
+        (click)="trocarAba('saude')">
+        🩺 Saúde
+      </button>
+      <button 
+        class="aba" 
+        [class.ativa]="abaAtiva === 'diario'"
+        (click)="trocarAba('diario')">
+        📝 Diário
+      </button>
+    </div>
+
+    <!-- CONTEÚDO DAS ABAS -->
+    
+    <!-- ABA CICLOS -->
+    @if (abaAtiva === 'ciclos') {
+      <div class="conteudo-aba">
+        <div class="card-header">
+          <h2>🩸 Ciclos Menstruais</h2>
+          <button class="btn-add" (click)="abrirFormulario()">+ Adicionar Ciclo</button>
+        </div>
+
+        <div class="ciclos-lista">
+          @for (ciclo of ciclos; track ciclo.codigo) {
+            <div class="ciclo-item">
+              <div class="ciclo-info">
+                <p><strong>📅 Data Início:</strong> {{ ciclo.dataInicio }}</p>
+                <p><strong>🔄 Duração do Ciclo:</strong> {{ ciclo.duracaoCiclo }} dias</p>
+                <p><strong>🩸 Menstruação:</strong> {{ ciclo.duracaoMenstruacao }} dias</p>
+              </div>
+              <div class="ciclo-acoes">
+                <button class="btn-edit" (click)="editarCiclo(ciclo)">✏️ Editar</button>
+                <button class="btn-delete" (click)="deletarCiclo(ciclo.codigo!)">🗑️ Excluir</button>
+              </div>
+            </div>
+          }
+
+          @if (ciclos.length === 0) {
+            <div class="sem-ciclos">
+              <p>📝 Nenhum ciclo registrado ainda!</p>
+              <p>Clique em "Adicionar Ciclo" para começar.</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ABA SINTOMAS -->
+    @if (abaAtiva === 'sintomas') {
+      <div class="conteudo-aba">
+        <h2>💊 Sintomas</h2>
+        <p class="em-desenvolvimento">🚧 Em desenvolvimento...</p>
+      </div>
+    }
+
+    <!-- ABA SAÚDE -->
+    @if (abaAtiva === 'saude') {
+      <div class="conteudo-aba">
+        <h2>🩺 Informações de Saúde</h2>
+        <p class="em-desenvolvimento">🚧 Em desenvolvimento...</p>
+      </div>
+    }
+
+    <!-- ABA DIÁRIO -->
+    @if (abaAtiva === 'diario') {
+      <div class="conteudo-aba">
+        <div class="card-header">
+          <h2>📝 Diário Pessoal</h2>
+          <button class="btn-add" (click)="abrirFormularioDiario()">+ Nova Anotação</button>
+        </div>
+
+        <div class="diarios-lista">
+          @for (diario of registrosDiarios; track diario.id) {
+            <div class="diario-item">
+              <div class="diario-header">
+                <h3>{{ diario.titulo }}</h3>
+                <span class="diario-data">📅 {{ diario.data }}</span>
+              </div>
+              <p class="diario-conteudo">{{ diario.conteudo }}</p>
+              <div class="diario-acoes">
+                <button class="btn-edit" (click)="editarDiario(diario)">✏️ Editar</button>
+                <button class="btn-delete" (click)="deletarDiario(diario.id)">🗑️ Excluir</button>
+              </div>
+            </div>
+          }
+
+          @if (registrosDiarios.length === 0) {
+            <div class="sem-ciclos">
+              <p>📝 Nenhuma anotação ainda!</p>
+              <p>Clique em "Nova Anotação" para começar seu diário.</p>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- POPUP FORMULÁRIO CICLO -->
+  @if (mostrarFormulario) {
+    <div class="formulario-overlay">
       <div class="formulario-card">
         <h3>{{ cicloSelecionado ? 'Editar Ciclo' : 'Novo Ciclo' }}</h3>
         
@@ -36,24 +165,92 @@
         </div>
       </div>
     </div>
+  }
 
-    <!-- LISTA DE CICLOS -->
-    <div class="ciclos-lista">
-      <div class="ciclo-item" *ngFor="let ciclo of ciclos">
-        <div class="ciclo-info">
-          <p><strong>📅 Data Início:</strong> {{ ciclo.dataInicio | date:'dd/MM/yyyy' }}</p>
-          <p><strong>🔄 Duração do Ciclo:</strong> {{ ciclo.duracaoCiclo }} dias</p>
-          <p><strong>🩸 Menstruação:</strong> {{ ciclo.duracaoMenstruacao }} dias</p>
-          <p class="ciclo-usuario" *ngIf="ciclo.usuario">
-            <strong>👤 Usuária:</strong> {{ ciclo.usuario.nome }}
-          </p>
+  <!-- POPUP EDITAR PERFIL -->
+  @if (mostrarEditarPerfil) {
+    <div class="formulario-overlay">
+      <div class="formulario-card">
+        <h3>✏️ Editar Perfil</h3>
+        
+        <div class="form-group">
+          <label>Nome:</label>
+          <input type="text" [(ngModel)]="usuario.nome" required>
         </div>
-        <div class="ciclo-acoes">
-          <button class="btn-edit" (click)="editarCiclo(ciclo)">✏️ Editar</button>
-          <button class="btn-delete" (click)="deletarCiclo(ciclo.codigo!)">🗑️ Excluir</button>
+
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" [(ngModel)]="usuario.email" required>
+        </div>
+
+        <div class="form-group">
+          <label>Telefone:</label>
+          <input type="tel" [(ngModel)]="usuario.telefone" placeholder="(00) 00000-0000">
+        </div>
+
+        <div class="form-buttons">
+          <button class="btn-save" (click)="salvarPerfil()">Salvar</button>
+          <button class="btn-cancel" (click)="fecharEditarPerfil()">Cancelar</button>
         </div>
       </div>
+    </div>
+  }
 
-      <div class="sem-ciclos" *ngIf="ciclos.length === 0">
-        <p>📝 Nenhum ciclo registrado ainda!</p>
-        <p>Clique em "Adicionar Cic
+  <!-- POPUP TROCAR SENHA -->
+  @if (mostrarTrocarSenha) {
+    <div class="formulario-overlay">
+      <div class="formulario-card">
+        <h3>🔐 Trocar Senha</h3>
+        
+        <div class="form-group">
+          <label>Senha Atual:</label>
+          <input type="password" placeholder="Digite sua senha atual">
+        </div>
+
+        <div class="form-group">
+          <label>Nova Senha:</label>
+          <input type="password" placeholder="Digite a nova senha">
+        </div>
+
+        <div class="form-group">
+          <label>Confirmar Nova Senha:</label>
+          <input type="password" placeholder="Confirme a nova senha">
+        </div>
+
+        <div class="form-buttons">
+          <button class="btn-save" (click)="salvarSenha()">Salvar</button>
+          <button class="btn-cancel" (click)="fecharTrocarSenha()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- POPUP DIÁRIO -->
+  @if (mostrarFormularioDiario) {
+    <div class="formulario-overlay">
+      <div class="formulario-card">
+        <h3>{{ diarioSelecionado ? '✏️ Editar Anotação' : '📝 Nova Anotação' }}</h3>
+        
+        <div class="form-group">
+          <label>Data:</label>
+          <input type="date" [(ngModel)]="diarioData" required>
+        </div>
+
+        <div class="form-group">
+          <label>Título:</label>
+          <input type="text" [(ngModel)]="diarioTitulo" placeholder="Ex: Como me senti hoje" required>
+        </div>
+
+        <div class="form-group">
+          <label>Anotação:</label>
+          <textarea [(ngModel)]="diarioConteudo" rows="6" placeholder="Escreva sobre seu dia, sentimentos, sintomas..."></textarea>
+        </div>
+
+        <div class="form-buttons">
+          <button class="btn-save" (click)="salvarDiario()">Salvar</button>
+          <button class="btn-cancel" (click)="fecharFormularioDiario()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

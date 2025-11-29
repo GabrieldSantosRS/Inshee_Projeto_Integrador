@@ -24,7 +24,7 @@ export interface CicloMenstrual {
   providedIn: 'root'
 })
 export class CiclosService {
-  private apiUrl = '/api/ciclosmenstruais';
+  private apiUrl = 'https://psychic-guide-9766799g4w693ppqq-8080.app.github.dev/ciclosmenstruais';
 
   constructor(private http: HttpClient) {}
 
