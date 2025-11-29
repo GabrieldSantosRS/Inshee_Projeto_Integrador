@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "https://psychic-guide-9766799g4w693ppqq-8080.app.github.dev",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}

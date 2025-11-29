@@ -5,12 +5,55 @@
   </div>
 
   <div class="card">
-    <h2>Configurações do Perfil</h2>
-    <p>Aqui você poderá gerenciar seus problemas menstruais e receber recomendações personalizadas.</p>
-    
-    <div class="em-construcao">
-      <p>🚧 Em desenvolvimento... 🚧</p>
-      <p>Amanhã implementamos o CRUD completo!</p>
+    <div class="card-header">
+      <h2>🩸 Ciclos Menstruais</h2>
+      <button class="btn-add" (click)="abrirFormulario()">+ Adicionar Ciclo</button>
     </div>
-  </div>
-</div>
+
+    <!-- FORMULÁRIO -->
+    <div class="formulario-overlay" *ngIf="mostrarFormulario">
+      <div class="formulario-card">
+        <h3>{{ cicloSelecionado ? 'Editar Ciclo' : 'Novo Ciclo' }}</h3>
+        
+        <div class="form-group">
+          <label>Data de Início:</label>
+          <input type="date" [(ngModel)]="dataInicio" required>
+        </div>
+
+        <div class="form-group">
+          <label>Duração do Ciclo (dias):</label>
+          <input type="number" [(ngModel)]="duracaoCiclo" min="21" max="35" required>
+        </div>
+
+        <div class="form-group">
+          <label>Duração da Menstruação (dias):</label>
+          <input type="number" [(ngModel)]="duracaoMenstruacao" min="2" max="10" required>
+        </div>
+
+        <div class="form-buttons">
+          <button class="btn-save" (click)="salvarCiclo()">Salvar</button>
+          <button class="btn-cancel" (click)="fecharFormulario()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTA DE CICLOS -->
+    <div class="ciclos-lista">
+      <div class="ciclo-item" *ngFor="let ciclo of ciclos">
+        <div class="ciclo-info">
+          <p><strong>📅 Data Início:</strong> {{ ciclo.dataInicio | date:'dd/MM/yyyy' }}</p>
+          <p><strong>🔄 Duração do Ciclo:</strong> {{ ciclo.duracaoCiclo }} dias</p>
+          <p><strong>🩸 Menstruação:</strong> {{ ciclo.duracaoMenstruacao }} dias</p>
+          <p class="ciclo-usuario" *ngIf="ciclo.usuario">
+            <strong>👤 Usuária:</strong> {{ ciclo.usuario.nome }}
+          </p>
+        </div>
+        <div class="ciclo-acoes">
+          <button class="btn-edit" (click)="editarCiclo(ciclo)">✏️ Editar</button>
+          <button class="btn-delete" (click)="deletarCiclo(ciclo.codigo!)">🗑️ Excluir</button>
+        </div>
+      </div>
+
+      <div class="sem-ciclos" *ngIf="ciclos.length === 0">
+        <p>📝 Nenhum ciclo registrado ainda!</p>
+        <p>Clique em "Adicionar Cic
