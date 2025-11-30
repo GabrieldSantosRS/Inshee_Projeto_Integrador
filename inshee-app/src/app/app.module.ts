@@ -6,11 +6,13 @@ import { provideHttpClient } from '@angular/common/http';
 import { routes } from './app.routes';
 import { CadastroLogin } from './pages/cadastro-login/cadastro-login';
 import { Profile } from './pages/profile/profile';
+import { Home } from './pages/home/home';
 
 @NgModule({
   declarations: [
     CadastroLogin,
-    Profile
+    Profile,
+    Home
   ],
   imports: [
     BrowserModule,

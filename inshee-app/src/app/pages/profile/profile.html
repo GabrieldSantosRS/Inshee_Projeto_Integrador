@@ -116,10 +116,10 @@
           @for (diario of registrosDiarios; track diario.id) {
             <div class="diario-item">
               <div class="diario-header">
-                <h3>{{ diario.titulo }}</h3>
-                <span class="diario-data">📅 {{ diario.data }}</span>
+                <h3>{{ diario.titulo || 'Sem título' }}</h3>
+                <span class="diario-data">📅 {{ diario.data || 'Sem data' }}</span>
               </div>
-              <p class="diario-conteudo">{{ diario.conteudo }}</p>
+              <p class="diario-conteudo">{{ diario.conteudo || 'Sem conteúdo' }}</p>
               <div class="diario-acoes">
                 <button class="btn-edit" (click)="editarDiario(diario)">✏️ Editar</button>
                 <button class="btn-delete" (click)="deletarDiario(diario.id)">🗑️ Excluir</button>

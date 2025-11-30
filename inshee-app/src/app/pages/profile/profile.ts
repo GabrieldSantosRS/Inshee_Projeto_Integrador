@@ -16,7 +16,6 @@ interface RegistroDiario {
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
-  // Dados do usuário
   usuario = {
     nome: 'Ana Silva',
     email: 'ana.silva@gmail.com',
@@ -25,10 +24,8 @@ export class Profile implements OnInit {
     genero: 'Feminino'
   };
 
-  // Abas
   abaAtiva: string = 'ciclos';
 
-  // Ciclos
   ciclos: CicloMenstrual[] = [];
   mostrarFormulario: boolean = false;
   cicloSelecionado: CicloMenstrual | null = null;
@@ -37,7 +34,6 @@ export class Profile implements OnInit {
   duracaoCiclo: number = 28;
   duracaoMenstruacao: number = 5;
 
-  // Diário
   registrosDiarios: RegistroDiario[] = [];
   mostrarFormularioDiario: boolean = false;
   diarioSelecionado: RegistroDiario | null = null;
@@ -45,7 +41,6 @@ export class Profile implements OnInit {
   diarioTitulo: string = '';
   diarioConteudo: string = '';
 
-  // Edição de perfil
   mostrarEditarPerfil: boolean = false;
   mostrarTrocarSenha: boolean = false;
 
@@ -55,7 +50,6 @@ export class Profile implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Tentar pegar dados do localStorage
     const usuarioSalvo = localStorage.getItem('usuario');
     if (usuarioSalvo) {
       this.usuario = JSON.parse(usuarioSalvo);
@@ -96,12 +90,10 @@ export class Profile implements OnInit {
     this.fecharTrocarSenha();
   }
 
-  // ===== FUNÇÕES DE CICLOS =====
   carregarCiclos() {
     this.ciclosService.getCiclos().subscribe({
       next: (dados) => {
         this.ciclos = dados;
-        console.log('Ciclos carregados:', dados);
       },
       error: (erro) => {
         console.error('Erro ao carregar ciclos:', erro);
@@ -133,41 +125,32 @@ export class Profile implements OnInit {
     if (this.cicloSelecionado) {
       this.ciclosService.updateCiclo(this.cicloSelecionado.codigo!, ciclo).subscribe({
         next: () => {
-          alert('Ciclo atualizado com sucesso!');
+          alert('Ciclo atualizado!');
           this.carregarCiclos();
           this.fecharFormulario();
         },
-        error: (erro) => {
-          console.error('Erro ao atualizar:', erro);
-          alert('Erro ao atualizar ciclo!');
-        }
+        error: () => alert('Erro!')
       });
     } else {
       this.ciclosService.createCiclo(ciclo).subscribe({
         next: () => {
-          alert('Ciclo adicionado com sucesso!');
+          alert('Ciclo adicionado!');
           this.carregarCiclos();
           this.fecharFormulario();
         },
-        error: (erro) => {
-          console.error('Erro ao criar:', erro);
-          alert('Erro ao criar ciclo!');
-        }
+        error: () => alert('Erro!')
       });
     }
   }
 
   deletarCiclo(codigo: number) {
-    if (confirm('Tem certeza que deseja excluir este ciclo?')) {
+    if (confirm('Excluir?')) {
       this.ciclosService.deleteCiclo(codigo).subscribe({
         next: () => {
-          alert('Ciclo excluído com sucesso!');
+          alert('Excluído!');
           this.carregarCiclos();
         },
-        error: (erro) => {
-          console.error('Erro ao deletar:', erro);
-          alert('Erro ao excluir ciclo!');
-        }
+        error: () => alert('Erro!')
       });
     }
   }
@@ -183,19 +166,20 @@ export class Profile implements OnInit {
     this.duracaoMenstruacao = 5;
   }
 
-  // ===== FUNÇÕES DE DIÁRIO =====
   carregarDiarios() {
-    const diariosSalvos = localStorage.getItem('registrosDiarios');
-    if (diariosSalvos) {
-      this.registrosDiarios = JSON.parse(diariosSalvos);
+    const salvos = localStorage.getItem('registrosDiarios');
+    if (salvos) {
+      this.registrosDiarios = JSON.parse(salvos);
     }
   }
 
   abrirFormularioDiario() {
-    this.mostrarFormularioDiario = true;
-    this.diarioSelecionado = null;
-    this.limparFormularioDiario();
-  }
+  this.mostrarFormularioDiario = true;
+  this.diarioSelecionado = null;
+  this.diarioData = '';
+  this.diarioTitulo = '';
+  this.diarioConteudo = '';
+}
 
   editarDiario(diario: RegistroDiario) {
     this.mostrarFormularioDiario = true;
@@ -206,13 +190,7 @@ export class Profile implements OnInit {
   }
 
   salvarDiario() {
-    if (!this.diarioData || !this.diarioTitulo || !this.diarioConteudo) {
-      alert('Preencha todos os campos!');
-      return;
-    }
-
     if (this.diarioSelecionado) {
-      // Editar
       const index = this.registrosDiarios.findIndex(d => d.id === this.diarioSelecionado!.id);
       this.registrosDiarios[index] = {
         id: this.diarioSelecionado.id,
@@ -220,45 +198,31 @@ export class Profile implements OnInit {
         titulo: this.diarioTitulo,
         conteudo: this.diarioConteudo
       };
-      alert('Registro atualizado com sucesso!');
     } else {
-      // Criar novo
-      const novoRegistro: RegistroDiario = {
+      this.registrosDiarios.push({
         id: Date.now(),
         data: this.diarioData,
         titulo: this.diarioTitulo,
         conteudo: this.diarioConteudo
-      };
-      this.registrosDiarios.push(novoRegistro);
-      alert('Registro adicionado com sucesso!');
+      });
     }
 
-    // Salvar no localStorage
     localStorage.setItem('registrosDiarios', JSON.stringify(this.registrosDiarios));
-    
-    // Ordenar por data (mais recente primeiro)
     this.registrosDiarios.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
-    
+    alert('Salvo!');
     this.fecharFormularioDiario();
   }
 
   deletarDiario(id: number) {
-    if (confirm('Tem certeza que deseja excluir este registro?')) {
+    if (confirm('Excluir?')) {
       this.registrosDiarios = this.registrosDiarios.filter(d => d.id !== id);
       localStorage.setItem('registrosDiarios', JSON.stringify(this.registrosDiarios));
-      alert('Registro excluído com sucesso!');
+      alert('Excluído!');
     }
   }
 
   fecharFormularioDiario() {
     this.mostrarFormularioDiario = false;
-    this.limparFormularioDiario();
-  }
-
-  limparFormularioDiario() {
-    this.diarioData = '';
-    this.diarioTitulo = '';
-    this.diarioConteudo = '';
   }
 
   logout() {

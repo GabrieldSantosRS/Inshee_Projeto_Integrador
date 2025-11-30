@@ -376,3 +376,73 @@
   margin: 10px 0;
   font-size: 16px;
 }
+
+/* DIÁRIO */
+.diarios-lista {
+  margin-top: 20px;
+}
+
+.diario-item {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.diario-item:hover {
+  transform: translateX(5px);
+}
+
+.diario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ffd4d4;
+}
+
+.diario-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.diario-data {
+  color: #ff9a9e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.diario-conteudo {
+  color: #666;
+  line-height: 1.6;
+  margin: 15px 0;
+  white-space: pre-wrap;
+}
+
+.diario-acoes {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #ff9a9e;
+}
